@@ -163,7 +163,6 @@ struct TextSelectionInfo
     void clear()
     {
         text.clear();
-        programName.clear();
         processId = 0;
         startTop.x = startTop.y = 0;
         startBottom.x = startBottom.y = 0;
