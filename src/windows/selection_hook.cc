@@ -137,6 +137,7 @@ struct TextSelectionInfo
 {
     std::wstring text;         ///< Selected text content
     std::wstring programName;  ///< program name that triggered the selection
+    DWORD processId;           ///< process id that owns the selection window
 
     POINT startTop;     ///< First paragraph left-top (screen coordinates)
     POINT startBottom;  ///< First paragraph left-bottom (screen coordinates)
@@ -149,7 +150,7 @@ struct TextSelectionInfo
     SelectionMethod method;
     SelectionPositionLevel posLevel;
 
-    TextSelectionInfo() : method(SelectionMethod::None), posLevel(SelectionPositionLevel::None)
+    TextSelectionInfo() : processId(0), method(SelectionMethod::None), posLevel(SelectionPositionLevel::None)
     {
         startTop.x = startTop.y = 0;
         startBottom.x = startBottom.y = 0;
@@ -162,6 +163,8 @@ struct TextSelectionInfo
     void clear()
     {
         text.clear();
+        programName.clear();
+        processId = 0;
         startTop.x = startTop.y = 0;
         startBottom.x = startBottom.y = 0;
         endTop.x = endTop.y = 0;
@@ -1253,6 +1256,7 @@ bool SelectionHook::GetSelectedText(HWND hwnd, TextSelectionInfo &selectionInfo)
 
     // Initialize structure
     selectionInfo.clear();
+    GetWindowThreadProcessId(hwnd, &selectionInfo.processId);
 
     // Get program name and store it in selectionInfo
     if (!GetProgramNameFromHwnd(hwnd, selectionInfo.programName))
@@ -2307,6 +2311,7 @@ Napi::Object SelectionHook::CreateSelectionResultObject(Napi::Env env, const Tex
     resultObj.Set(Napi::String::New(env, "text"), Napi::String::New(env, utf8Text));
 
     resultObj.Set(Napi::String::New(env, "programName"), Napi::String::New(env, utf8Program));
+    resultObj.Set(Napi::String::New(env, "processId"), Napi::Number::New(env, selectionInfo.processId));
     // Add method and position level information
     resultObj.Set(Napi::String::New(env, "method"), Napi::Number::New(env, static_cast<int>(selectionInfo.method)));
     resultObj.Set(Napi::String::New(env, "posLevel"), Napi::Number::New(env, static_cast<int>(selectionInfo.posLevel)));

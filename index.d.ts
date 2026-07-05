@@ -32,6 +32,8 @@ export interface TextSelectionData {
   text: string;
   /** The program name that triggered the selection */
   programName: string;
+  /** The process id that owns the selection source window. Currently available on Windows. */
+  processId?: number;
   /** First paragraph's top-left point (x, y) in pixels */
   startTop: Point;
   /** First paragraph's bottom-left point (x, y) in pixels */

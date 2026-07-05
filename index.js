@@ -612,6 +612,7 @@ class SelectionHook extends EventEmitter {
     const selectionInfo = {
       text: data.text,
       programName: data.programName,
+      processId: data.processId || 0,
       startTop: { x: data.startTopX, y: data.startTopY },
       startBottom: { x: data.startBottomX, y: data.startBottomY },
       endTop: { x: data.endTopX, y: data.endTopY },
