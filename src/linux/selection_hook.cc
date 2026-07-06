@@ -1363,6 +1363,12 @@ void SelectionHook::ProcessMouseEvent(Napi::Env env, Napi::Function function, Mo
         // Output INVALID_COORDINATE when position source is unreliable (e.g. libevdev on Wayland)
         int outX = currentPos.valid ? currentPos.x : INVALID_COORDINATE;
         int outY = currentPos.valid ? currentPos.y : INVALID_COORDINATE;
+        std::string sourceProgramName;
+        uint64_t sourceWindow = currentInstance->protocol->GetActiveWindow();
+        if (sourceWindow)
+        {
+            currentInstance->protocol->GetProgramNameFromWindow(sourceWindow, sourceProgramName);
+        }
 
         Napi::Object resultObj = Napi::Object::New(env);
         resultObj.Set(Napi::String::New(env, "type"), Napi::String::New(env, "mouse-event"));
@@ -1371,6 +1377,8 @@ void SelectionHook::ProcessMouseEvent(Napi::Env env, Napi::Function function, Mo
         resultObj.Set(Napi::String::New(env, "y"), Napi::Number::New(env, outY));
         resultObj.Set(Napi::String::New(env, "button"), Napi::Number::New(env, static_cast<int>(mouseButton)));
         resultObj.Set(Napi::String::New(env, "flag"), Napi::Number::New(env, mouseFlagValue));
+        resultObj.Set(Napi::String::New(env, "programName"), Napi::String::New(env, sourceProgramName));
+        resultObj.Set(Napi::String::New(env, "processId"), Napi::Number::New(env, 0));
         function.Call({resultObj});
     }
 
@@ -1696,6 +1704,16 @@ void SelectionHook::ProcessKeyboardEvent(Napi::Env env, Napi::Function function,
     // Create and emit keyboard event object
     if (!eventTypeStr.empty())
     {
+        std::string sourceProgramName;
+        if (currentInstance && currentInstance->protocol)
+        {
+            uint64_t sourceWindow = currentInstance->protocol->GetActiveWindow();
+            if (sourceWindow)
+            {
+                currentInstance->protocol->GetProgramNameFromWindow(sourceWindow, sourceProgramName);
+            }
+        }
+
         Napi::Object resultObj = Napi::Object::New(env);
         resultObj.Set(Napi::String::New(env, "type"), Napi::String::New(env, "keyboard-event"));
         resultObj.Set(Napi::String::New(env, "action"), Napi::String::New(env, eventTypeStr));
@@ -1703,6 +1721,8 @@ void SelectionHook::ProcessKeyboardEvent(Napi::Env env, Napi::Function function,
         resultObj.Set(Napi::String::New(env, "vkCode"), Napi::Number::New(env, keyCode));
         resultObj.Set(Napi::String::New(env, "sys"), Napi::Boolean::New(env, isSysKey));
         resultObj.Set(Napi::String::New(env, "flags"), Napi::Number::New(env, keyFlags));
+        resultObj.Set(Napi::String::New(env, "programName"), Napi::String::New(env, sourceProgramName));
+        resultObj.Set(Napi::String::New(env, "processId"), Napi::Number::New(env, 0));
         function.Call({resultObj});
     }
 

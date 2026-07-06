@@ -425,6 +425,8 @@ Contains mouse click/movement information in screen coordinates.
 | `x` | `number` | Horizontal pointer position (px). |
 | `y` | `number` | Vertical pointer position (px). |
 | `button` | `number` | Same as WebAPIs' `MouseEvent.button`. `0`=Left, `1`=Middle, `2`=Right, `3`=Back, `4`=Forward, `-1`=None, `99`=Unknown. |
+| `programName` | `string` | Name of the source application. Empty when unavailable. |
+| `processId` | `number` | Process id of the source application. `0` when unavailable. |
 
 > **Linux Wayland:** `x`/`y` may be [`INVALID_COORDINATE`](#selectionhookinvalid_coordinate) (`-99999`). See [Coordinate note](#types).
 
@@ -442,6 +444,8 @@ Describes mouse wheel scrolling events.
 | `y` | `number` | Vertical pointer position (px). |
 | `button` | `number` | `0`=Vertical, `1`=Horizontal scroll. |
 | `flag` | `number` | `1`=Up/Right, `-1`=Down/Left. |
+| `programName` | `string` | Name of the source application. Empty when unavailable. |
+| `processId` | `number` | Process id of the source application. `0` when unavailable. |
 
 > **Linux Wayland:** `x`/`y` may be [`INVALID_COORDINATE`](#selectionhookinvalid_coordinate) (`-99999`). See [Coordinate note](#types).
 
@@ -458,6 +462,8 @@ Represents keyboard key presses/releases.
 | `sys` | `boolean` | Whether modifier keys (Ctrl/Alt/Win(Super)/⌘/⌥/Fn) are pressed simultaneously. |
 | `scanCode` | `number?` | Hardware scan code. _Windows only._ |
 | `flags` | `number` | Additional state flags. On Linux: modifier bitmask (`0x01`=Shift, `0x02`=Ctrl, `0x04`=Alt, `0x08`=Meta). |
+| `programName` | `string` | Name of the source application. Empty when unavailable. |
+| `processId` | `number` | Process id of the source application. `0` when unavailable. |
 
 Platform-specific `vkCode` values:
 

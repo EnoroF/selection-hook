@@ -151,17 +151,17 @@ class SelectionHook extends EventEmitter {
               break;
             case "mouse-event":
               if (data.action === "mouse-wheel") {
-                const { x, y, button, flag } = data;
-                this.emit(data.action, { x, y, button, flag });
+                const { x, y, button, flag, programName, processId } = data;
+                this.emit(data.action, { x, y, button, flag, programName: programName || "", processId: processId || 0 });
               } else {
-                const { x, y, button } = data;
-                this.emit(data.action, { x, y, button });
+                const { x, y, button, programName, processId } = data;
+                this.emit(data.action, { x, y, button, programName: programName || "", processId: processId || 0 });
               }
               break;
             case "keyboard-event":
               {
-                const { uniKey, vkCode, sys, scanCode, flags } = data;
-                const keyData = { uniKey, vkCode, sys, flags };
+                const { uniKey, vkCode, sys, scanCode, flags, programName, processId } = data;
+                const keyData = { uniKey, vkCode, sys, flags, programName: programName || "", processId: processId || 0 };
                 if (scanCode !== undefined) keyData.scanCode = scanCode;
                 this.emit(data.action, keyData);
               }

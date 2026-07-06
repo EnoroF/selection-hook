@@ -1620,6 +1620,13 @@ void SelectionHook::ProcessMouseEvent(Napi::Env env, Napi::Function function, Mo
     auto mouseType = pMouseEvent->type;
     MouseButton mouseButton = static_cast<MouseButton>(pMouseEvent->button);
     auto mouseFlag = pMouseEvent->flag;
+    NSRunningApplication *sourceApp = GetFrontApp();
+    pid_t sourceProcessId = sourceApp ? sourceApp.processIdentifier : 0;
+    std::string sourceProgramName;
+    if (sourceApp)
+    {
+        GetProgramNameFromFrontApp(sourceApp, sourceProgramName);
+    }
 
     // Static variables for tracking mouse events
     static CGPoint lastLastMouseUpPos = CGPointZero;  // Last last mouse up position
@@ -1815,6 +1822,8 @@ void SelectionHook::ProcessMouseEvent(Napi::Env env, Napi::Function function, Mo
         resultObj.Set(Napi::String::New(env, "y"), Napi::Number::New(env, currentPos.y));
         resultObj.Set(Napi::String::New(env, "button"), Napi::Number::New(env, static_cast<int>(mouseButton)));
         resultObj.Set(Napi::String::New(env, "flag"), Napi::Number::New(env, mouseFlagValue));
+        resultObj.Set(Napi::String::New(env, "programName"), Napi::String::New(env, sourceProgramName));
+        resultObj.Set(Napi::String::New(env, "processId"), Napi::Number::New(env, sourceProcessId));
         function.Call({resultObj});
     }
 
@@ -1834,6 +1843,13 @@ void SelectionHook::ProcessKeyboardEvent(Napi::Env env, Napi::Function function,
     // Add event type string
     std::string eventTypeStr;
     CGKeyCode vkCode = pKeyboardEvent->keyCode;
+    NSRunningApplication *sourceApp = GetFrontApp();
+    pid_t sourceProcessId = sourceApp ? sourceApp.processIdentifier : 0;
+    std::string sourceProgramName;
+    if (sourceApp)
+    {
+        GetProgramNameFromFrontApp(sourceApp, sourceProgramName);
+    }
 
     switch (pKeyboardEvent->event)
     {
@@ -1915,6 +1931,8 @@ void SelectionHook::ProcessKeyboardEvent(Napi::Env env, Napi::Function function,
     keyboardEventObj.Set(Napi::String::New(env, "vkCode"), Napi::Number::New(env, vkCode));
     keyboardEventObj.Set(Napi::String::New(env, "sys"), Napi::Boolean::New(env, isSysKey));
     keyboardEventObj.Set(Napi::String::New(env, "flags"), Napi::Number::New(env, pKeyboardEvent->flags));
+    keyboardEventObj.Set(Napi::String::New(env, "programName"), Napi::String::New(env, sourceProgramName));
+    keyboardEventObj.Set(Napi::String::New(env, "processId"), Napi::Number::New(env, sourceProcessId));
     function.Call({keyboardEventObj});
 
     delete pKeyboardEvent;

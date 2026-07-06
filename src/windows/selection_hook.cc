@@ -881,6 +881,14 @@ void SelectionHook::ProcessMouseEvent(Napi::Env env, Napi::Function function, Mo
     auto mEvent = pMouseEvent->event;
     auto nMouseData = pMouseEvent->mouseData;
     POINT currentPos = {pMouseEvent->ptX, pMouseEvent->ptY};
+    HWND sourceHwnd = GetWindowUnderMouse();
+    DWORD sourceProcessId = 0;
+    std::wstring sourceProgramName;
+    if (sourceHwnd)
+    {
+        GetWindowThreadProcessId(sourceHwnd, &sourceProcessId);
+        GetProgramNameFromHwnd(sourceHwnd, sourceProgramName);
+    }
 
     delete pMouseEvent;
 
@@ -1180,6 +1188,8 @@ void SelectionHook::ProcessMouseEvent(Napi::Env env, Napi::Function function, Mo
         resultObj.Set(Napi::String::New(env, "y"), Napi::Number::New(env, currentPos.y));
         resultObj.Set(Napi::String::New(env, "button"), Napi::Number::New(env, static_cast<int>(mouseButton)));
         resultObj.Set(Napi::String::New(env, "flag"), Napi::Number::New(env, mouseFlag));
+        resultObj.Set(Napi::String::New(env, "programName"), Napi::String::New(env, StringPool::WideToUtf8(sourceProgramName)));
+        resultObj.Set(Napi::String::New(env, "processId"), Napi::Number::New(env, sourceProcessId));
         function.Call({resultObj});
     }
 }
@@ -1199,6 +1209,14 @@ void SelectionHook::ProcessKeyboardEvent(Napi::Env env, Napi::Function function,
     auto vkCode = pKeyboardEvent->vkCode;
     auto scanCode = pKeyboardEvent->scanCode;
     auto flags = pKeyboardEvent->flags;
+    HWND sourceHwnd = GetForegroundWindow();
+    DWORD sourceProcessId = 0;
+    std::wstring sourceProgramName;
+    if (sourceHwnd)
+    {
+        GetWindowThreadProcessId(sourceHwnd, &sourceProcessId);
+        GetProgramNameFromHwnd(sourceHwnd, sourceProgramName);
+    }
 
     delete pKeyboardEvent;
 
@@ -1236,6 +1254,8 @@ void SelectionHook::ProcessKeyboardEvent(Napi::Env env, Napi::Function function,
         resultObj.Set(Napi::String::New(env, "sys"), Napi::Boolean::New(env, isSysKey));
         resultObj.Set(Napi::String::New(env, "scanCode"), Napi::Number::New(env, scanCode));
         resultObj.Set(Napi::String::New(env, "flags"), Napi::Number::New(env, flags));
+        resultObj.Set(Napi::String::New(env, "programName"), Napi::String::New(env, StringPool::WideToUtf8(sourceProgramName)));
+        resultObj.Set(Napi::String::New(env, "processId"), Napi::Number::New(env, sourceProcessId));
         function.Call({resultObj});
     }
 }

@@ -55,6 +55,16 @@ export interface TextSelectionData {
 }
 
 /**
+ * Source application data for input events.
+ */
+export interface SourceApplicationData {
+  /** The program name that owns the source window */
+  programName: string;
+  /** The process id that owns the source window. Returns 0 when unavailable. */
+  processId: number;
+}
+
+/**
  * Mouse event data structure
  *
  * Contains information about mouse events such as clicks and movements.
@@ -62,7 +72,7 @@ export interface TextSelectionData {
  * On Linux Wayland, `x`/`y` may be `-99999` (INVALID_COORDINATE) when
  * the coordinate source cannot provide screen positions.
  */
-export interface MouseEventData {
+export interface MouseEventData extends SourceApplicationData {
   /** X coordinate of mouse pointer (px) */
   x: number;
   /** Y coordinate of mouse pointer (px) */
@@ -82,7 +92,7 @@ export interface MouseEventData {
  * On Linux Wayland, `x`/`y` may be `-99999` (INVALID_COORDINATE) when
  * the coordinate source cannot provide screen positions.
  */
-export interface MouseWheelEventData {
+export interface MouseWheelEventData extends SourceApplicationData {
   /** X coordinate of mouse pointer (px) */
   x: number;
   /** Y coordinate of mouse pointer (px) */
@@ -104,7 +114,7 @@ export interface MouseWheelEventData {
  *
  * Contains information about keyboard events such as key presses and releases.
  */
-export interface KeyboardEventData {
+export interface KeyboardEventData extends SourceApplicationData {
   /**
    * Unified key value of the vkCode. Same as MDN `KeyboardEvent.key` values.
    * Converted from platform-specific vkCode.

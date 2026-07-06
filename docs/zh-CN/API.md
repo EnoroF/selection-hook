@@ -427,6 +427,8 @@ hook.on("error", (error) => {
 | `x` | `number` | 水平指针位置（像素）。 |
 | `y` | `number` | 垂直指针位置（像素）。 |
 | `button` | `number` | 与 WebAPIs 的 `MouseEvent.button` 相同。`0`=左键，`1`=中键，`2`=右键，`3`=后退，`4`=前进，`-1`=无，`99`=未知。 |
+| `programName` | `string` | 来源应用程序名称。不可用时为空字符串。 |
+| `processId` | `number` | 来源应用程序进程 id。不可用时为 `0`。 |
 
 > **Linux Wayland：** `x`/`y` 可能为 [`INVALID_COORDINATE`](#selectionhookinvalid_coordinate)（`-99999`）。参见[坐标说明](#types)。
 
@@ -444,6 +446,8 @@ hook.on("error", (error) => {
 | `y` | `number` | 垂直指针位置（像素）。 |
 | `button` | `number` | `0`=垂直滚动，`1`=水平滚动。 |
 | `flag` | `number` | `1`=向上/向右，`-1`=向下/向左。 |
+| `programName` | `string` | 来源应用程序名称。不可用时为空字符串。 |
+| `processId` | `number` | 来源应用程序进程 id。不可用时为 `0`。 |
 
 > **Linux Wayland：** `x`/`y` 可能为 [`INVALID_COORDINATE`](#selectionhookinvalid_coordinate)（`-99999`）。参见[坐标说明](#types)。
 
@@ -460,6 +464,8 @@ hook.on("error", (error) => {
 | `sys` | `boolean` | 是否同时按下了修饰键（Ctrl/Alt/Win(Super)/⌘/⌥/Fn）。 |
 | `scanCode` | `number?` | 硬件扫描码。_仅限 Windows。_ |
 | `flags` | `number` | 附加状态标志。在 Linux 上为修饰键位掩码（`0x01`=Shift，`0x02`=Ctrl，`0x04`=Alt，`0x08`=Meta）。 |
+| `programName` | `string` | 来源应用程序名称。不可用时为空字符串。 |
+| `processId` | `number` | 来源应用程序进程 id。不可用时为 `0`。 |
 
 各平台的 `vkCode` 值：
 
